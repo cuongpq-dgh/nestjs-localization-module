@@ -3,6 +3,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { Translation } from './translations.entity';
 import { TranslationsService } from './translations.service';
 import { TranslationsController } from './translations.controller';
+import { LocalizationAuthGuard } from './localization-auth.guard';
 
 export interface TranslationsModuleOptions {
   connectionOptions?: TypeOrmModuleOptions;
@@ -26,7 +27,7 @@ export class TranslationsModule {
     const providers: Provider[] = [];
 
     // Nếu có connectionOptions, tự quản lý kết nối DB
-    if (options.connectionOptions) {
+    if (options?.connectionOptions) {
       imports.push(TypeOrmModule.forRoot(options.connectionOptions));
     }
 
@@ -44,6 +45,7 @@ export class TranslationsModule {
       imports,
       providers: [
         ...providers,
+        LocalizationAuthGuard,  // Đăng ký LocalizationAuthGuard làm provider
         TranslationsService,
       ],
       controllers: [TranslationsController],
