@@ -8,10 +8,9 @@ import { LocalizationAuthGuard } from './localization-auth.guard';
 export interface TranslationsModuleOptions {
   connectionOptions?: TypeOrmModuleOptions;
   /**
-   * authGuard: class guard do backend chủ cung cấp,
-   * phải implements CanActivate.
+   * authGuard: lớp guard do backend chủ cung cấp, phải implements CanActivate.
    */
-  authGuard: any;
+  authGuard: new (...args: any[]) => any;
 }
 
 export const AUTH_GUARD_TOKEN = 'AUTH_GUARD_TOKEN';
@@ -26,18 +25,16 @@ export class TranslationsModule {
     const imports = [];
     const providers: Provider[] = [];
 
-    // Nếu có connectionOptions, tự quản lý kết nối DB
     if (options?.connectionOptions) {
       imports.push(TypeOrmModule.forRoot(options.connectionOptions));
     }
-
     // Đăng ký entity của localization
     imports.push(TypeOrmModule.forFeature([Translation]));
 
-    // Cung cấp authGuard qua injection token
+    // Sử dụng useClass để NestJS tự tạo instance của guard được cung cấp
     providers.push({
       provide: AUTH_GUARD_TOKEN,
-      useValue: options.authGuard,
+      useClass: options.authGuard,
     });
 
     return {
@@ -45,7 +42,7 @@ export class TranslationsModule {
       imports,
       providers: [
         ...providers,
-        LocalizationAuthGuard,  // Đăng ký LocalizationAuthGuard làm provider
+        LocalizationAuthGuard, // Guard trung gian sử dụng AUTH_GUARD_TOKEN
         TranslationsService,
       ],
       controllers: [TranslationsController],
