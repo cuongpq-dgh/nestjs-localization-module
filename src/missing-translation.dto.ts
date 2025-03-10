@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class MissingTranslationDto {
   @IsString()
@@ -7,8 +7,13 @@ export class MissingTranslationDto {
 
   @IsString()
   @IsNotEmpty()
+  ns!: string;
+
+  @IsString()
+  @IsNotEmpty()
   key!: string;
 
   @IsString()
+  @IsOptional()
   defaultValue?: string;
 }

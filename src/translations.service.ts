@@ -12,8 +12,8 @@ export class TranslationsService {
     private readonly translationRepo: Repository<Translation>,
   ) {}
 
-  async getTranslations(lang: string): Promise<Record<string, string>> {
-    const translations = await this.translationRepo.find({ where: { lang } });
+  async getTranslations(lang: string, ns: string = 'translation'): Promise<Record<string, string>> {
+    const translations = await this.translationRepo.find({ where: { lang, ns } });
     return translations.reduce((acc, curr) => {
       acc[curr.key] = curr.value;
       return acc;
@@ -26,15 +26,16 @@ export class TranslationsService {
       .insert()
       .into(Translation)
       .values(dto)
-      .orUpdate(['value'], ['lang', 'key'])
+      .orUpdate(['value'], ['lang', 'ns', 'key'])
       .execute();
   }
 
   async addMissingTranslation(dto: MissingTranslationDto): Promise<void> {
-    const existing = await this.translationRepo.findOne({ where: { lang: dto.lang, key: dto.key } });
+    const existing = await this.translationRepo.findOne({ where: { lang: dto.lang, ns: dto.ns, key: dto.key } });
     if (!existing) {
       const newTranslation = this.translationRepo.create({
         lang: dto.lang,
+        ns: dto.ns,
         key: dto.key,
         value: dto.defaultValue ? dto.defaultValue : dto.key,
       });

@@ -7,6 +7,10 @@ export class UpdateTranslationDto {
 
   @IsString()
   @IsNotEmpty()
+  ns!: string;
+
+  @IsString()
+  @IsNotEmpty()
   key!: string;
 
   @IsString()

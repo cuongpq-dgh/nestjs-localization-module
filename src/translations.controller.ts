@@ -9,9 +9,9 @@ import { MissingTranslationDto } from './missing-translation.dto';
 export class TranslationsController {
   constructor(private readonly translationsService: TranslationsService) { }
 
-  @Get(':lang')
-  getTranslations(@Param('lang') lang: string) {
-    return this.translationsService.getTranslations(lang);
+  @Get(':lang/:ns')
+  getTranslations(@Param('lang') lang: string, @Param('ns') ns: string) {
+    return this.translationsService.getTranslations(lang, ns);
   }
 
   @Post('update')
@@ -19,9 +19,21 @@ export class TranslationsController {
     return this.translationsService.updateTranslation(dto);
   }
 
-  @Post('missing')
-  async addMissingTranslation(@Body() dto: MissingTranslationDto) {
-    await this.translationsService.addMissingTranslation(dto);
+  @Post('add/:lng/:ns')
+  async addMissingTranslations(
+    @Param('lng') lng: string,
+    @Param('ns') ns: string,
+    @Body() missingKeys: Record<string, string>,
+  ) {
+    for (const key in missingKeys) {
+      const defaultValue = missingKeys[key];
+      await this.translationsService.addMissingTranslation({
+        lang: lng,
+        ns: ns,
+        key,
+        defaultValue: defaultValue || key,
+      });
+    }
     return { success: true };
   }
 }
