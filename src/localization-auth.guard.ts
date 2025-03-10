@@ -1,16 +1,16 @@
-import { Injectable, CanActivate, ExecutionContext, Inject } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, Inject, Optional } from '@nestjs/common';
 import { Observable, isObservable, lastValueFrom } from 'rxjs';
 import { AUTH_GUARD_TOKEN } from './translations.module';
 
 @Injectable()
 export class LocalizationAuthGuard implements CanActivate {
   constructor(
-    @Inject(AUTH_GUARD_TOKEN) private readonly authGuard: CanActivate | null,
+    @Optional() @Inject(AUTH_GUARD_TOKEN) private readonly authGuard: CanActivate | null,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     if (!this.authGuard) {
-      // Nếu authGuard không được cung cấp, cho phép request
+      // Nếu không có authGuard được cung cấp, cho phép tất cả request.
       return true;
     }
     const result = this.authGuard.canActivate(context);
