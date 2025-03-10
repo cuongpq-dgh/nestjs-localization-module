@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Translation } from './translations.entity';
 import { UpdateTranslationDto } from './translations.dto';
+import { MissingTranslationDto } from './missing-translation.dto';
 
 @Injectable()
 export class TranslationsService {
@@ -27,5 +28,17 @@ export class TranslationsService {
       .values(dto)
       .orUpdate(['value'], ['lang', 'key'])
       .execute();
+  }
+
+  async addMissingTranslation(dto: MissingTranslationDto): Promise<void> {
+    const existing = await this.translationRepo.findOne({ where: { lang: dto.lang, key: dto.key } });
+    if (!existing) {
+      const newTranslation = this.translationRepo.create({
+        lang: dto.lang,
+        key: dto.key,
+        value: dto.defaultValue ? dto.defaultValue : dto.key,
+      });
+      await this.translationRepo.save(newTranslation);
+    }
   }
 }
