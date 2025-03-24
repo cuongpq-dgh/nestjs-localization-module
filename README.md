@@ -1,7 +1,7 @@
 # nestjs-localization-module
 <p align="center">
-  <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/nestjs-localization-module.svg" alt="NPM Version" /></a>
-  <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/nestjs-localization-module.svg" alt="Package License" /></a>
+  <a href="https://www.npmjs.com/~nestjs-localization-module" target="_blank"><img src="https://img.shields.io/npm/v/nestjs-localization-module.svg" alt="NPM Version" /></a>
+  <a href="https://www.npmjs.com/~nestjs-localization-module" target="_blank"><img src="https://img.shields.io/npm/l/nestjs-localization-module.svg" alt="Package License" /></a>
 </p>
 
 **nestjs-localization-module** là một NestJS dynamic module giúp quản lý localization (dịch thuật) cho ứng dụng NestJS sử dụng PostgreSQL. Module này hỗ trợ:
