@@ -1,6 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext, Inject, Optional } from '@nestjs/common';
 import { Observable, isObservable, lastValueFrom } from 'rxjs';
-import { AUTH_GUARD_TOKEN } from './translations.module';
+import { AUTH_GUARD_TOKEN } from './module/translations.module';
 
 @Injectable()
 export class LocalizationAuthGuard implements CanActivate {

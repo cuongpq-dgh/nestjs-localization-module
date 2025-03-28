@@ -1,19 +1,23 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class UpdateTranslationDto {
+export class CreateThirdPartyConfigDto {
   @IsString()
   @IsNotEmpty()
-  lang!: string;
+  code!: string;
 
   @IsString()
   @IsNotEmpty()
-  ns!: string;
+  name!: string;
 
   @IsString()
   @IsNotEmpty()
-  key!: string;
+  type!: string;
 
   @IsString()
   @IsNotEmpty()
   value!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  group!: string;
 }
