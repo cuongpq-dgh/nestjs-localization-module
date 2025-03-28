@@ -1,0 +1,792 @@
+{
+  "info": {
+    "_postman_id": "b5df78a1-4b22-4a0f-a968-366b8d58fd70",
+    "name": "NestJS Localization Module",
+    "description": "API collection for testing the NestJS Localization Module",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3003",
+      "type": "string",
+      "description": "Base URL for the API"
+    }
+  ],
+  "item": [
+    {
+      "name": "Translations",
+      "item": [
+        {
+          "name": "Get Translations",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/translations/:lang/:ns?categoryId=",
+              "host": ["{{base_url}}"],
+              "path": ["translations", ":lang", ":ns"],
+              "query": [
+                {
+                  "key": "categoryId",
+                  "value": "",
+                  "description": "Optional category ID to filter translations"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "lang",
+                  "value": "en",
+                  "description": "Language code"
+                },
+                {
+                  "key": "ns",
+                  "value": "translation",
+                  "description": "Namespace"
+                }
+              ]
+            },
+            "description": "Get translations for a specific language and namespace"
+          },
+          "response": []
+        },
+        {
+          "name": "Find All Translations",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/translations?key=&lang=&ns=&categoryId=",
+              "host": ["{{base_url}}"],
+              "path": ["translations"],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "",
+                  "description": "Filter by key"
+                },
+                {
+                  "key": "lang",
+                  "value": "",
+                  "description": "Filter by language"
+                },
+                {
+                  "key": "ns",
+                  "value": "",
+                  "description": "Filter by namespace"
+                },
+                {
+                  "key": "categoryId",
+                  "value": "",
+                  "description": "Filter by category ID"
+                }
+              ]
+            },
+            "description": "Find translations with optional filtering"
+          },
+          "response": []
+        },
+        {
+          "name": "Find Translation by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/translations/:id",
+              "host": ["{{base_url}}"],
+              "path": ["translations", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Translation ID"
+                }
+              ]
+            },
+            "description": "Find a translation by its ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Translation",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/translations",
+              "host": ["{{base_url}}"],
+              "path": ["translations"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"key\": \"welcome\",\n    \"value\": \"Welcome to our application\",\n    \"lang\": \"en\",\n    \"ns\": \"common\",\n    \"categoryId\": null\n}"
+            },
+            "description": "Create a new translation"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Translation",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/translations",
+              "host": ["{{base_url}}"],
+              "path": ["translations"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"key\": \"welcome\",\n    \"value\": \"Welcome to our updated application\",\n    \"lang\": \"en\",\n    \"ns\": \"common\",\n    \"categoryId\": null\n}"
+            },
+            "description": "Update an existing translation"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Translation",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/translations/:id",
+              "host": ["{{base_url}}"],
+              "path": ["translations", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Translation ID"
+                }
+              ]
+            },
+            "description": "Delete a translation by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Add Translation",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/translations/add-translation",
+              "host": ["{{base_url}}"],
+              "path": ["translations", "add-translation"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"key\": \"missing_key\",\n    \"lang\": \"en\",\n    \"ns\": \"common\",\n    \"defaultValue\": \"This is a missing translation\",\n    \"categoryId\": null\n}"
+            },
+            "description": "Add a translation"
+          },
+          "response": []
+        },
+        {
+          "name": "Add Many Translation",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/translations/add-many/:lng/:ns?categoryId=",
+              "host": ["{{base_url}}"],
+              "path": ["translations", "add-many", ":lng", ":ns"],
+              "query": [
+                {
+                  "key": "categoryId",
+                  "value": "",
+                  "description": "Optional category ID"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "lng",
+                  "value": "en",
+                  "description": "Language code"
+                },
+                {
+                  "key": "ns",
+                  "value": "common",
+                  "description": "Namespace"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"button.save\": \"Save\",\n    \"button.cancel\": \"Cancel\",\n    \"button.submit\": \"Submit\"\n}"
+            },
+            "description": "Add multiple translations at once"
+          },
+          "response": []
+        },
+        {
+          "name": "Batch Translate",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/translations/batch-translate",
+              "host": ["{{base_url}}"],
+              "path": ["translations", "batch-translate"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"texts\": [\n        \"Hello world\",\n        \"How are you?\",\n        \"Welcome to our application\",\n        \"Please login to continue\",\n        \"Thank you for your submission\"\n    ],\n    \"targetLang\": \"vi\",\n    \"sourceLang\": \"en\"\n}"
+            },
+            "description": "Batch translate multiple texts at once"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Languages",
+      "item": [
+        {
+          "name": "Get All Languages",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/languages?active=true",
+              "host": ["{{base_url}}"],
+              "path": ["languages"],
+              "query": [
+                {
+                  "key": "active",
+                  "value": "true",
+                  "description": "Filter by active status (optional)"
+                }
+              ]
+            },
+            "description": "Get all languages with optional active filter"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Language by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/languages/id/:id",
+              "host": ["{{base_url}}"],
+              "path": ["languages", "id", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Language ID"
+                }
+              ]
+            },
+            "description": "Get language details by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Language by Code",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/languages/code/:code",
+              "host": ["{{base_url}}"],
+              "path": ["languages", "code", ":code"],
+              "variable": [
+                {
+                  "key": "code",
+                  "value": "en",
+                  "description": "Language Code (e.g. 'en', 'fr')"
+                }
+              ]
+            },
+            "description": "Get language details by language code"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Language",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/languages",
+              "host": ["{{base_url}}"],
+              "path": ["languages"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"code\": \"fr\",\n    \"name\": \"French\",\n    \"active\": true,\n    \"isDefault\": false,\n    \"flagIcon\": \"fr-flag\"\n}"
+            },
+            "description": "Create a new language"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Language",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/languages/:id",
+              "host": ["{{base_url}}"],
+              "path": ["languages", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Language ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"code\": \"fr\",\n    \"name\": \"French (Updated)\",\n    \"active\": true,\n    \"flagIcon\": \"fr-flag-updated\"\n}"
+            },
+            "description": "Update a language"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Language",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/languages/:id",
+              "host": ["{{base_url}}"],
+              "path": ["languages", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Language ID"
+                }
+              ]
+            },
+            "description": "Delete a language"
+          },
+          "response": []
+        },
+        {
+          "name": "Set as Default Language",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/languages/:id/set-default",
+              "host": ["{{base_url}}"],
+              "path": ["languages", ":id", "set-default"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Language ID"
+                }
+              ]
+            },
+            "description": "Set a language as the default language"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Default Language",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/languages/default",
+              "host": ["{{base_url}}"],
+              "path": ["languages", "default"]
+            },
+            "description": "Get the default language"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/categories",
+              "host": ["{{base_url}}"],
+              "path": ["categories"]
+            },
+            "description": "Get all categories"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Category by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/categories/id/:id",
+              "host": ["{{base_url}}"],
+              "path": ["categories", "id", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Category ID"
+                }
+              ]
+            },
+            "description": "Get category details by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Category by Slug",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/categories/slug/:slug",
+              "host": ["{{base_url}}"],
+              "path": ["categories", "slug", ":slug"],
+              "variable": [
+                {
+                  "key": "slug",
+                  "value": "general",
+                  "description": "Category Slug"
+                }
+              ]
+            },
+            "description": "Get category details by slug"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/categories",
+              "host": ["{{base_url}}"],
+              "path": ["categories"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"General\",\n    \"description\": \"General translations\",\n    \"slug\": \"general\",\n    \"parentId\": null\n}"
+            },
+            "description": "Create a new category"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Category",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/categories/:id",
+              "host": ["{{base_url}}"],
+              "path": ["categories", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Category ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"General (Updated)\",\n    \"description\": \"Updated general translations\",\n    \"slug\": \"general\",\n    \"parentId\": null\n}"
+            },
+            "description": "Update a category"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Category",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/categories/:id",
+              "host": ["{{base_url}}"],
+              "path": ["categories", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Category ID"
+                }
+              ]
+            },
+            "description": "Delete a category"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Category Progress",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/categories/:id/progress?lang=",
+              "host": ["{{base_url}}"],
+              "path": ["categories", ":id", "progress"],
+              "query": [
+                {
+                  "key": "lang",
+                  "value": "",
+                  "description": "Optional language code to filter progress by language"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Category ID"
+                }
+              ]
+            },
+            "description": "Get translation progress for a category"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Third Party Config",
+      "item": [
+        {
+          "name": "Get All Configs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/third-party-config?code=&type=&group=",
+              "host": ["{{base_url}}"],
+              "path": ["third-party-config"],
+              "query": [
+                {
+                  "key": "code",
+                  "value": "",
+                  "description": "Filter by code"
+                },
+                {
+                  "key": "type",
+                  "value": "",
+                  "description": "Filter by type"
+                },
+                {
+                  "key": "group",
+                  "value": "",
+                  "description": "Filter by group"
+                }
+              ]
+            },
+            "description": "Get all third party configs with optional filtering"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Config by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/third-party-config/id/:id",
+              "host": ["{{base_url}}"],
+              "path": ["third-party-config", "id", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Config ID"
+                }
+              ]
+            },
+            "description": "Get third party config by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Config by Code",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/third-party-config/code/:code",
+              "host": ["{{base_url}}"],
+              "path": ["third-party-config", "code", ":code"],
+              "variable": [
+                {
+                  "key": "code",
+                  "value": "MICROSOFT_TRANSLATOR_API_KEY",
+                  "description": "Config Code"
+                }
+              ]
+            },
+            "description": "Get third party config by code"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Configs by Group",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/third-party-config/group/:group",
+              "host": ["{{base_url}}"],
+              "path": ["third-party-config", "group", ":group"],
+              "variable": [
+                {
+                  "key": "group",
+                  "value": "TRANSLATOR",
+                  "description": "Config Group"
+                }
+              ]
+            },
+            "description": "Get third party configs by group"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Configs by Type",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/third-party-config/type/:type",
+              "host": ["{{base_url}}"],
+              "path": ["third-party-config", "type", ":type"],
+              "variable": [
+                {
+                  "key": "type",
+                  "value": "API_KEY",
+                  "description": "Config Type"
+                }
+              ]
+            },
+            "description": "Get third party configs by type"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Config",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/third-party-config",
+              "host": ["{{base_url}}"],
+              "path": ["third-party-config"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"code\": \"MICROSOFT_TRANSLATOR_API_KEY\",\n    \"name\": \"Microsoft Translator API Key\",\n    \"type\": \"API_KEY\",\n    \"value\": \"your-api-key-here\",\n    \"group\": \"TRANSLATOR\"\n}"
+            },
+            "description": "Create a new third party config"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Config",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/third-party-config/:id",
+              "host": ["{{base_url}}"],
+              "path": ["third-party-config", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Config ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"code\": \"MICROSOFT_TRANSLATOR_API_KEY\",\n    \"name\": \"Microsoft Translator API Key\",\n    \"type\": \"API_KEY\",\n    \"value\": \"your-updated-api-key-here\",\n    \"group\": \"TRANSLATOR\"\n}"
+            },
+            "description": "Update a third party config"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Config",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/third-party-config/:id",
+              "host": ["{{base_url}}"],
+              "path": ["third-party-config", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "Config ID"
+                }
+              ]
+            },
+            "description": "Delete a third party config"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
