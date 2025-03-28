@@ -89,7 +89,7 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{base_url}}/translations/:id",
+              "raw": "{{base_url}}/translations/detail/:id",
               "host": ["{{base_url}}"],
               "path": ["translations", ":id"],
               "variable": [

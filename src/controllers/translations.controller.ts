@@ -27,7 +27,7 @@ export class TranslationsController {
     return this.translationsService.findAll(filterDto);
   }
 
-  @Get(':id')
+  @Get('detail/:id')
   findById(@Param('id') id: string) {
     return this.translationsService.findById(id);
   }
