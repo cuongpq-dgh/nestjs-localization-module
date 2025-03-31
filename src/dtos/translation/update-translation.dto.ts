@@ -16,8 +16,4 @@ export class UpdateTranslationDto {
   @IsString()
   @IsOptional()
   ns?: string = 'translation';
-
-  @IsString()
-  @IsOptional()
-  categoryId?: string;
 }

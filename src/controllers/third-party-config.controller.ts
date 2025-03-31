@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } fro
 import { ThirdPartyConfigService } from '../services/third-party-config.service';
 import { UpdateThirdPartyConfigDto } from '../dtos/third-party-config/update-third-party-config.dto';
 import { FilterThirdPartyConfigDto } from '../dtos/third-party-config/filter-third-party-config.dto';
-import { LocalizationAuthGuard } from '../localization-auth.guard';
+import { LocalizationAuthGuard } from '../guards/localization-auth.guard';
 import { CreateThirdPartyConfigDto } from '../dtos/third-party-config/create-third-party-config.dto';
 
 @Controller('third-party-config')
