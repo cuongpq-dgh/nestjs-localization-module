@@ -22,7 +22,17 @@
         "dist",
         "README.md"
     ],
-    "author": "pqcuong737",
+    "author": {
+        "name": "pqcuong737",
+        "email": "pqcuong737@gmail.com",
+        "url": "https://github.com/pqcuong737"
+    },
+    "contributors": [
+        {
+            "name": "aluwas",
+            "url": "https://github.com/anhnv-dgh"
+        }
+    ],
     "license": "MIT",
     "dependencies": {
         "@nestjs/common": "^9.0.0",
