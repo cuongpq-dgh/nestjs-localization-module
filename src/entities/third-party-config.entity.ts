@@ -1,29 +1,34 @@
-import { Column, CreateDateColumn, Entity, Generated, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
-@Entity('nlm_third_party_config')
+@Entity('third_party_configs')
 export class ThirdPartyConfigEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
-    @PrimaryGeneratedColumn('uuid')
-    id!: string;
+  @Column()
+  code!: string;
 
-    @Column()
-    code!: string;
+  @Column()
+  provider!: string;
 
-    @Column()
-    name!: string;
+  @Column()
+  value!: string;
 
-    @Column()
-    type!: string;
+  @Column({ nullable: true })
+  region?: string
+  
+  @Column()
+  type!: string;
 
-    @Column()
-    value!: string;
+  @Column()
+  group!: string;
 
-    @Column()
-    group!: string;
+  @CreateDateColumn()
+  createdAt?: Date;
 
-    @CreateDateColumn()
-    created_at!: Date;
-    
-    @UpdateDateColumn()
-    updated_at!: Date;
+  @UpdateDateColumn()
+  updatedAt?: Date;
 }
+
+// Thêm export alias cho tương thích ngược
+export { ThirdPartyConfigEntity as ThirdPartyConfig };

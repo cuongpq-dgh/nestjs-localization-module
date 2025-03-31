@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards, HttpStatus } from '@nestjs/common';
 import { TranslationsService } from '../services/translations.service';
-import { LocalizationAuthGuard } from '../localization-auth.guard';
+import { LocalizationAuthGuard } from '../guards/localization-auth.guard';
 import { CreateTranslationDto } from '../dtos/translation/create-translation.dto';
 import { UpdateTranslationDto } from '../dtos/translation/update-translation.dto';
 import { FilterTranslationDto } from '../dtos/translation/filter-translation.dto';
@@ -16,10 +16,9 @@ export class TranslationsController {
   @Get(':lang/:ns')
   getTranslations(
     @Param('lang', new ParseStringParamPipe({ required: true, decodeUrl: true })) lang: string, 
-    @Param('ns', new ParseStringParamPipe({ required: true, decodeUrl: true })) ns: string,
-    @Query('categoryId', new ParseStringParamPipe({ decodeUrl: true })) categoryId?: string
+    @Param('ns', new ParseStringParamPipe({ required: true, decodeUrl: true })) ns: string
   ) {
-    return this.translationsService.getTranslations(lang, ns, categoryId);
+    return this.translationsService.getTranslations(lang, ns);
   }
 
   @Get()
@@ -47,15 +46,13 @@ export class TranslationsController {
     return this.translationsService.remove(id);
   }
 
-
   @Post('add/:lng/:ns')
   async addManyTranslation(
     @Param('lng') lng: string,
     @Param('ns') ns: string,
-    @Body() inputs: Record<string, string>,
-    @Query('categoryId') categoryId?: string
+    @Body() inputs: Record<string, string>
   ) {
-    const count = await this.translationsService.addManyTranslation(lng, ns, inputs, categoryId);
+    const count = await this.translationsService.addManyTranslation(lng, ns, inputs);
     return { success: true, count };
   }
 
