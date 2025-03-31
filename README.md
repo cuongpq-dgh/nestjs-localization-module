@@ -9,9 +9,7 @@
 - Xử lý các translations (tự động lưu các key dịch chưa có)
 - Hỗ trợ đa namespace để quản lý các nhóm dịch khác nhau
 - Tích hợp authentication tùy chọn cho các API localization
-- Quản lý danh mục (categories) để phân loại các bản dịch
 - Tự động dịch với Microsoft Translator API
-- Theo dõi tiến trình dịch cho từng danh mục
 
 ## Tính năng
 
@@ -19,9 +17,7 @@
 - **Multi-Namespace Support**: Hỗ trợ nhiều namespace để phân chia các bản dịch theo nhóm.
 - **Translation API**: Tự động lưu các key dịch thông qua endpoint POST.
 - **Tích hợp Authentication**: Cho phép bảo vệ các API localization thông qua guard tùy chỉnh.
-- **Quản lý danh mục**: Phân loại bản dịch theo danh mục, hỗ trợ cấu trúc danh mục phân cấp.
 - **Tự động dịch**: Tích hợp với Microsoft Translator API để tự động dịch sang các ngôn ngữ khác.
-- **Báo cáo tiến trình**: Theo dõi tiến trình dịch cho từng danh mục và ngôn ngữ.
 
 ## Cài đặt
 
@@ -46,22 +42,28 @@ import { YourAuthGuard } from './auth/your-auth.guard'; // (Tùy chọn)
 @Module({
   imports: [
     TranslationsModule.forRoot({
-      connectionOptions: {
-        type: 'postgres',
-        host: process.env.POSTGRES_HOST || 'localhost',
-        port: parseInt(process.env.POSTGRES_PORT || '5432', 10),
-        username: process.env.POSTGRES_USER || 'postgres',
-        password: process.env.POSTGRES_PASSWORD || 'postgres',
-        database: process.env.POSTGRES_DB || 'localization_db',
-        autoLoadEntities: true,
-        synchronize: true,
-      },
+      useExistingConnection: true, // Sử dụng kết nối hiện có từ TypeOrmModul forRoot,
       // Nếu muốn bảo vệ các API localization, cung cấp guard tùy chỉnh.
       authGuard: YourAuthGuard, 
     }),
   ],
 })
 export class AppModule {}
+// dataSource.ts
+export const dataSourceOptions: DataSourceOptions = {
+  type: 'mysql', // hoặc loại database bạn dùng
+  host: 'localhost',
+  port: 3306,
+  username: 'root',
+  password: 'password',
+  database: 'your_db',
+  entities: [
+    'dist/**/*.entity{.ts,.js}', // Bao gồm tất cả entity trong dist
+    'node_modules/nestjs-localization-module/dist/**/*.entity{.ts,.js}', // Thêm entity từ thư viện
+  ],
+  autoLoadEntities: true,
+  synchronize: true, // Chỉ dùng trong dev, tắt trong production
+};
 ```
 
 #### Cấu hình nâng cao
@@ -129,8 +131,7 @@ Module cung cấp các nhóm endpoint sau:
 #### Translations API
 
 - **GET /translations/:lang/:ns**  
-  Lấy toàn bộ bản dịch cho ngôn ngữ và namespace được chỉ định.  
-  Query params: `categoryId` (tùy chọn) để lọc theo danh mục.
+  Lấy toàn bộ bản dịch cho ngôn ngữ và namespace được chỉ định.
   
   **Ví dụ Request:**
   ```http
@@ -151,7 +152,7 @@ Module cung cấp các nhóm endpoint sau:
 
 - **GET /translations**  
   Lấy danh sách bản dịch với bộ lọc tùy chọn.  
-  Query params: `key`, `lang`, `ns`, `categoryId`.
+  Query params: `key`, `lang`, `ns`.
   
   **Ví dụ Request:**
   ```http
@@ -192,7 +193,7 @@ Module cung cấp các nhóm endpoint sau:
 
 - **POST /translations**  
   Tạo một bản dịch mới.  
-  Body: `{ key, value, lang, ns?, categoryId? }`
+  Body: `{ key, value, lang, ns? }`
   
   **Ví dụ Request:**
   ```http
@@ -203,8 +204,7 @@ Module cung cấp các nhóm endpoint sau:
     "key": "greeting",
     "value": "Xin chào bạn",
     "lang": "vi",
-    "ns": "common",
-    "categoryId": "C1xn4JvtPqBs3MmP6xMme"
+    "ns": "common"
   }
   ```
   
@@ -215,7 +215,6 @@ Module cung cấp các nhóm endpoint sau:
     "key": "greeting",
     "value": "Xin chào bạn",
     "ns": "common",
-    "categoryId": "C1xn4JvtPqBs3MmP6xMme",
     "lang": {
       "id": "L1xn4JkaLB3M45P6xkn2",
       "code": "vi",
@@ -226,7 +225,7 @@ Module cung cấp các nhóm endpoint sau:
 
 - **PUT /translations**  
   Cập nhật một bản dịch.  
-  Body: `{ key, value, lang, ns?, categoryId? }`
+  Body: `{ key, value, lang, ns? }`
   
   **Ví dụ Request:**
   ```http
@@ -248,7 +247,6 @@ Module cung cấp các nhóm endpoint sau:
     "key": "greeting",
     "value": "Xin chào quý khách",
     "ns": "common",
-    "categoryId": "C1xn4JvtPqBs3MmP6xMme",
     "lang": {
       "id": "L1xn4JkaLB3M45P6xkn2",
       "code": "vi",
@@ -272,7 +270,7 @@ Module cung cấp các nhóm endpoint sau:
 
 - **POST /translations/add-translation**  
   Thêm một bản dịch.  
-  Body: `{ key, lang, ns?, defaultValue?, categoryId? }`
+  Body: `{ key, lang, ns?, defaultValue? }`
   
   **Ví dụ Request:**
   ```http
@@ -282,8 +280,7 @@ Module cung cấp các nhóm endpoint sau:
   {
     "key": "common.newKey",
     "lang": "en",
-    "ns": "translation",
-    "categoryId": "C1xn4JvtPqBs3MmP6xMme"
+    "ns": "translation"
   }
   ```
   
@@ -294,7 +291,6 @@ Module cung cấp các nhóm endpoint sau:
     "key": "common.newKey",
     "value": "common.newKey",
     "ns": "translation",
-    "categoryId": "C1xn4JvtPqBs3MmP6xMme",
     "lang": {
       "id": "L1xn4JkaLB3M45P6xkn1",
       "code": "en",
@@ -306,12 +302,11 @@ Module cung cấp các nhóm endpoint sau:
 - **POST /translations/add-many/:lng/:ns**  
   Thêm nhiều bản dịch cùng lúc.  
   Path params: `lng` (language code), `ns` (namespace)  
-  Query params: `categoryId` (tùy chọn)  
   Body: Object với key-value là các bản dịch cần thêm.
   
   **Ví dụ Request:**
   ```http
-  POST /translations/add-many/en/common?categoryId=C1xn4JvtPqBs3MmP6xMme
+  POST /translations/add-many/en/common
   Content-Type: application/json
   
   {
@@ -442,69 +437,6 @@ Module cung cấp các nhóm endpoint sau:
   }
   ```
 
-#### Categories API
-
-- **GET /categories**  
-  Lấy danh sách tất cả danh mục.
-  
-  **Ví dụ Response:**
-  ```json
-  [
-    {
-      "id": "C1xn4JvtPqBs3MmP6xMme",
-      "name": "General",
-      "description": "General translations",
-      "slug": "general",
-      "parentId": null
-    },
-    {
-      "id": "C2xn4JvtPqBs3MmP6xMmf",
-      "name": "Dashboard",
-      "description": "Dashboard translations",
-      "slug": "dashboard",
-      "parentId": null
-    }
-  ]
-  ```
-
-- **GET /categories/:id/progress**  
-  Lấy thông tin tiến trình dịch cho danh mục.  
-  Query params: `lang` (tùy chọn) để xem tiến trình cho một ngôn ngữ cụ thể.
-  
-  **Ví dụ Request:**
-  ```http
-  GET /categories/C1xn4JvtPqBs3MmP6xMme/progress
-  ```
-  
-  **Ví dụ Response:**
-  ```json
-  {
-    "categoryId": "C1xn4JvtPqBs3MmP6xMme",
-    "categoryName": "General",
-    "totalKeys": 24,
-    "languageProgress": [
-      {
-        "language": {
-          "id": "L1xn4JkaLB3M45P6xkn1",
-          "code": "en",
-          "name": "English"
-        },
-        "translatedCount": 24,
-        "percentage": 100
-      },
-      {
-        "language": {
-          "id": "L1xn4JkaLB3M45P6xkn2",
-          "code": "vi",
-          "name": "Tiếng Việt"
-        },
-        "translatedCount": 18,
-        "percentage": 75
-      }
-    ]
-  }
-  ```
-
 ### 4. Cấu hình i18next (Phía Client)
 
 Khi sử dụng i18next trên client, bạn có thể cấu hình để tương thích với backend:
@@ -604,10 +536,9 @@ export class AppModule {
 
 1. **Cài đặt và cấu hình module** trong dự án NestJS
 2. **Tạo các ngôn ngữ** cho ứng dụng (ít nhất một ngôn ngữ mặc định)
-3. **Tạo các danh mục** (tùy chọn) để phân loại bản dịch
-4. **Thêm bản dịch** cho ngôn ngữ mặc định
-5. **Cấu hình Microsoft Translator API** (tùy chọn) để hỗ trợ auto-translate
-6. **Tích hợp front-end** với các API của module
+3. **Thêm bản dịch** cho ngôn ngữ mặc định
+4. **Cấu hình Microsoft Translator API** (tùy chọn) để hỗ trợ auto-translate
+5. **Tích hợp front-end** với các API của module
 
 #### Quy trình localization tự động
 

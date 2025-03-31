@@ -5,12 +5,18 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
-        "build": "tsc",
+        "build": "tsc -p tsconfig.json",
         "prepare": "npm run build",
         "prepublishOnly": "npm run build",
         "start": "node dist/main.js",
-        "start:dev": "ts-node src/main.ts",
-        "start:watch": "nodemon --exec ts-node src/main.ts"
+        "start:dev": "tsc-watch -p tsconfig.json --onSuccess \"node dist/example/main.js\"",
+        "start:watch": "nodemon --exec ts-node src/main.ts",
+        "start:example": "ts-node example/main.ts",
+        "test:api": "ts-node example/test-api.ts",
+        "format": "prettier --write \"src/**/*.ts\"",
+        "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+        "test": "jest",
+        "prepublish": "npm run build"
     },
     "files": [
         "dist",
@@ -43,6 +49,7 @@
         "@types/uuid": "^9.0.2",
         "nodemon": "^3.0.1",
         "ts-node": "^10.9.1",
+        "tsconfig-paths": "^4.2.0",
         "typescript": "^4.0.0"
     }
 }

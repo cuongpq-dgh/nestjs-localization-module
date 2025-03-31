@@ -16,8 +16,4 @@ export class MissingTranslationDto {
   @IsString()
   @IsOptional()
   defaultValue?: string;
-
-  @IsString()
-  @IsOptional()
-  categoryId?: string;
 }

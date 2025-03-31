@@ -1,10 +1,11 @@
-import { Injectable, NotFoundException, Logger } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger, Inject, Optional } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { ThirdPartyConfigEntity } from '../entities/third-party-config.entity';
 import { UpdateThirdPartyConfigDto } from '../dtos/third-party-config/update-third-party-config.dto';
 import { FilterThirdPartyConfigDto } from '../dtos/third-party-config/filter-third-party-config.dto';
 import { CreateThirdPartyConfigDto } from '../dtos/third-party-config/create-third-party-config.dto';
+import { CONNECTION_NAME_TOKEN } from '../module/translations.module';
 
 @Injectable()
 export class ThirdPartyConfigService {
@@ -17,6 +18,7 @@ export class ThirdPartyConfigService {
   constructor(
     @InjectRepository(ThirdPartyConfigEntity)
     private readonly thirdPartyConfigRepo: Repository<ThirdPartyConfigEntity>,
+    @Optional() @Inject(CONNECTION_NAME_TOKEN) private readonly connectionName?: string,
   ) {}
 
   /**

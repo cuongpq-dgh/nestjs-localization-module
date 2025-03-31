@@ -12,8 +12,4 @@ export class FilterTranslationDto {
   @IsString()
   @IsOptional()
   ns?: string;
-
-  @IsString()
-  @IsOptional()
-  categoryId?: string;
 }
