@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, Logger, Inject, Optional } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Not, In } from 'typeorm';
 import { TranslationEntity } from '../entities/translations.entity';
@@ -9,6 +9,7 @@ import { MissingTranslationDto } from '../dtos/translation/missing-translation.d
 import { LanguageEntity } from '../entities/language.entity';
 import { MicrosoftTranslatorService } from './microsoft-translator.service';
 import { plainToClass } from 'class-transformer';
+import { CONNECTION_NAME_TOKEN } from '../module/translations.module';
 
 // Thêm các interface hỗ trợ
 interface LanguageTranslationMap {
@@ -33,19 +34,18 @@ export class TranslationsService {
     @InjectRepository(LanguageEntity)
     private readonly languageRepo: Repository<LanguageEntity>,
     private readonly translatorService: MicrosoftTranslatorService,
+    @Optional() @Inject(CONNECTION_NAME_TOKEN) private readonly connectionName?: string,
   ) {}
 
   /**
    * Get translations for a specific language and namespace
    * @param lang Language code
    * @param ns Namespace
-   * @param categoryId Optional category ID to filter translations
    * @returns Object with key-value pairs of translations
    */
   async getTranslations(
     lang: string, 
-    ns: string = 'translation',
-    categoryId?: string
+    ns: string = 'translation'
   ): Promise<Record<string, string>> {
     try {
       // Optimize query: select only needed fields and use index
@@ -54,10 +54,6 @@ export class TranslationsService {
         .innerJoin('translation.lang', 'lang')
         .where('lang.code = :lang', { lang })
         .andWhere('translation.ns = :ns', { ns });
-      
-      if (categoryId) {
-        queryBuilder.andWhere('translation.categoryId = :categoryId', { categoryId });
-      }
       
       // Cache query result for frequently accessed namespaces
       if (['translation', 'common'].includes(ns)) {
@@ -100,10 +96,6 @@ export class TranslationsService {
         
         if (filterDto.ns) {
           queryBuilder.andWhere('translation.ns = :ns', { ns: filterDto.ns });
-        }
-        
-        if (filterDto.categoryId) {
-          queryBuilder.andWhere('translation.categoryId = :categoryId', { categoryId: filterDto.categoryId });
         }
       }
       
@@ -218,9 +210,6 @@ export class TranslationsService {
       
       // Update translation value and category if provided
       translation.value = updateDto.value;
-      if (updateDto.categoryId) {
-        translation.categoryId = updateDto.categoryId;
-      }
       
       const result = await this.translationRepo.save(translation);
       
@@ -271,7 +260,6 @@ export class TranslationsService {
           ns: ns,
           key: dto.key,
           value: dto.key, // Set default value to the key since value is now required
-          categoryId: dto.categoryId
         });
         
         const result = await this.translationRepo.save(newTranslation);
@@ -299,14 +287,12 @@ export class TranslationsService {
    * @param langCode Language code
    * @param ns Namespace
    * @param translations Key-value pairs of translations
-   * @param categoryId Optional category ID
    * @returns Number of translations added
    */
   async addManyTranslation(
     langCode: string, 
     ns: string, 
-    translations: Record<string, string>,
-    categoryId?: string
+    translations: Record<string, string>
   ): Promise<number> {
     try {
       const language = await this.languageRepo.findOne({
@@ -346,8 +332,7 @@ export class TranslationsService {
             lang: language,
             ns,
             key,
-            value: translations[key] || key,
-            categoryId
+            value: translations[key] || key
           });
         }
       }
@@ -547,7 +532,6 @@ export class TranslationsService {
 
   /**
    * Auto-translate a translation to all other active languages
-   * Optimized for maximum performance without caching
    * @param translation The source translation
    */
   private async autoTranslateToOtherLanguages(translation: TranslationEntity): Promise<void> {
@@ -594,8 +578,7 @@ export class TranslationsService {
           lang: language,
           ns: translation.ns,
           key: translation.key,
-          value: translatedValue,
-          categoryId: translation.categoryId
+          value: translatedValue
         });
         
         translationsToSave.push(newTranslation);

@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException, Logger } from "@nestjs/common";
+import { Injectable, NotFoundException, Logger, Inject, Optional } from "@nestjs/common";
 import { Not, Repository } from "typeorm";
 import { LanguageEntity } from "../entities/language.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CreateLanguageDto } from "../dtos/language/create-language.dto";
 import { UpdateLanguageDto } from "../dtos/language/update-language.dto";
+import { CONNECTION_NAME_TOKEN } from '../module/translations.module';
 
 @Injectable()
 export class LanguageService {
@@ -14,7 +15,8 @@ export class LanguageService {
 
     constructor(
         @InjectRepository(LanguageEntity)
-        private readonly languageRepo: Repository<LanguageEntity>
+        private readonly languageRepo: Repository<LanguageEntity>,
+        @Optional() @Inject(CONNECTION_NAME_TOKEN) private readonly connectionName?: string,
     ) {}
 
     /**
